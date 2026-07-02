@@ -1,0 +1,56 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { useState, useEffect } from "react";
+import { ArrowUp } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+
+export default function BackToTop() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 400) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          id="back-to-top-container"
+          className="fixed bottom-6 right-6 z-40"
+          initial={{ opacity: 0, scale: 0.8, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: 10 }}
+          transition={{ duration: 0.3 }}
+        >
+          <button
+            id="back-to-top-btn"
+            onClick={scrollToTop}
+            className="w-12 h-12 rounded-full bg-white border border-gold-400/40 text-gold-500 flex items-center justify-center cursor-pointer hover:bg-gold-500 hover:text-white transition-all duration-300 shadow-gold"
+            aria-label="Retour en haut de la page"
+          >
+            <ArrowUp className="w-5 h-5 animate-bounce" />
+          </button>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
